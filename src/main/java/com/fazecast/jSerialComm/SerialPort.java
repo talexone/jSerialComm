@@ -763,10 +763,12 @@ public final class SerialPort
 		if (userDataListener != null)
 			return false;
 		userDataListener = listener;
-		serialEventListener = ((userDataListener instanceof SerialPortPacketListener) ? new SerialPortEventListener(((SerialPortPacketListener)userDataListener).getPacketSize()) :
-			((userDataListener instanceof SerialPortMessageListener) ?
-					new SerialPortEventListener(((SerialPortMessageListener)userDataListener).getMessageDelimiter(), ((SerialPortMessageListener)userDataListener).delimiterIndicatesEndOfMessage()) :
-						new SerialPortEventListener()));
+		serialEventListener = ((userDataListener instanceof SerialPortMessageListener) && (userDataListener instanceof SerialPortPacketListener)?
+			new SerialPortEventListener(((SerialPortPacketListener)userDataListener).getPacketSize(), ((SerialPortMessageListener)userDataListener).getMessageDelimiter(), ((SerialPortMessageListener)userDataListener).delimiterIndicatesEndOfMessage()):
+				((userDataListener instanceof SerialPortPacketListener) ? new SerialPortEventListener(((SerialPortPacketListener)userDataListener).getPacketSize()) :
+					((userDataListener instanceof SerialPortMessageListener) ?
+						new SerialPortEventListener(((SerialPortMessageListener)userDataListener).getMessageDelimiter(), ((SerialPortMessageListener)userDataListener).delimiterIndicatesEndOfMessage()) :
+							new SerialPortEventListener())));
 
 		eventFlags = 0;
 		if ((listener.getListeningEvents() & LISTENING_EVENT_DATA_AVAILABLE) > 0)
@@ -1341,7 +1343,7 @@ public final class SerialPort
 		public SerialPortEventListener() { dataPacket = new byte[0]; delimiters = new byte[0]; messageEndIsDelimited = true; }
 		public SerialPortEventListener(int packetSizeToReceive) { dataPacket = new byte[packetSizeToReceive]; delimiters = new byte[0]; messageEndIsDelimited = true; }
 		public SerialPortEventListener(byte[] messageDelimiters, boolean delimiterForMessageEnd) { dataPacket = new byte[0]; delimiters = messageDelimiters; messageEndIsDelimited = delimiterForMessageEnd; }
-
+		public SerialPortEventListener(int packetSizeToReceive, byte[] messageDelimiters, boolean delimiterForMessageEnd) { dataPacket = new byte[packetSizeToReceive]; delimiters = messageDelimiters; messageEndIsDelimited = delimiterForMessageEnd;}
 		public final void startListening()
 		{
 			if (eventListenerRunning)
