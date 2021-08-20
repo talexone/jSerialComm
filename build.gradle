@@ -12,7 +12,7 @@ plugins {
 
 group = 'com.fazecast'
 archivesBaseName = 'jSerialComm'
-version = '2.7.0'
+version = '2.7.1'
 ext.moduleName = 'com.fazecast.jSerialComm'
 
 if (hasProperty('manualBuild'))
@@ -21,8 +21,8 @@ if (hasProperty('manualBuild'))
   assert hasProperty('java9Home'): "Set the property 'java9Home' in your gradle.properties file pointing to a Java 9 JDK installation"
 }
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 javadoc.options.links("https://docs.oracle.com/javase/9/docs/api/")
 javadoc.options.addBooleanOption('html4', true)
 
